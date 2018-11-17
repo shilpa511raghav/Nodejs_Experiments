@@ -1,0 +1,51 @@
+insert
+update
+
+
+
+listing
+insert/update
+delete
+
+
+get
+/users
+
+web
+ios
+android
+
+post
+/users
+
+router.get('/read', ( req, res, next ) => {
+
+  var file_path = process.env.HOME + '/registration/public/data.json';
+  var data;
+  var out_data;
+
+  fs.readFile( file_path, ( err, data ) => {
+
+    out_data = [
+      {
+        "err": err,
+        "data": JSON.parse(data)
+      }
+    ];
+    res.setHeader( 'Content-Type', 'application/json' );
+    res.send( JSON.stringify( out_data ) );
+  } );
+
+} );
+
+router.get('/write', (req, res, next) => {
+
+});
+
+router.get('/upadte', (req, res, next) => {
+
+});
+
+router.get('/delete', (req, res, next) => {
+
+});

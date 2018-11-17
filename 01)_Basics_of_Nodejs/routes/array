@@ -1,0 +1,24 @@
+local
+db 
+us root
+pwd root
+db test
+
+
+
+env dev, prod
+
+if
+
+else
+
+
+array functions
+filter 
+map
+find
+shift
+foreach
+reduce
+every
+some
