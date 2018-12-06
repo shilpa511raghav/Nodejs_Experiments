@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var userCtrl = require('../controllers/enquiry-controller');
+var userCtrl = require('../controllers/fees-controller');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -20,7 +20,7 @@ router.post('/', [
     userCtrl.insert
 ]);
 
-router.put('/:id', [
+router.post('/:id', [
     userCtrl.update
 ]);
 

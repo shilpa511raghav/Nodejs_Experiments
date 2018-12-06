@@ -1,10 +1,16 @@
 var express = require('express');
-var User = require('../models').Enquiry;
+var Enquiry = require('../models').Enquiry;
 var CommonCntrl = require('./common-controller');
+
 
 var config = {};
 
 config.err_messages = {
+    'firstName': "First Name",
+    'lastName': "Last Name",
+    'fatherName': "Father Name",
+    'enqDate':"Enquiry Date",
+    'courseId': "Course Id"
 };
 
 config.expected_keys = [
@@ -12,7 +18,6 @@ config.expected_keys = [
     'lastName',
     'fatherName',
     'enqDate',
-    'course',
     'courseId',
     'remarks',
     'status'
@@ -22,8 +27,7 @@ config.not_null_keys = [
     'firstName',
     'lastName',
     'fatherName',
-    'enqDate',
-    'course',
+    'courseId'
     
 ];
 
@@ -31,7 +35,9 @@ config.required_keys = [
     'firstName',
     'lastName',
     'fatherName',
-    'course'
+    'enqDate',
+    'courseId'
+   
 
 ];
 
@@ -42,11 +48,15 @@ var insert = (req, res, next) => {
     var in_data = {};
     in_data = CommonCntrl_obj.check_inputs(req.body, true);
 
-    if (in_data.err.length) {
+    if ( in_data.err.length > 0 ) {
+        
+        res.status(200).send({ in_data });
+    } else if (( typeof in_data.err.err != "undefined" ) && (in_data.err.err.length > 0) ) {
+
         res.status(200).send({ in_data });
     } else {
-
-        User.build(in_data.data).save()
+        
+        Enquiry.build(in_data.data).save()
             .then((result) => {
 
                 res.status(200).send({ result: result, in_data: in_data });
@@ -65,7 +75,7 @@ var update = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Enquiry.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -80,7 +90,7 @@ var update = (req, res, next) => {
                     res.status(200).send({ in_data });
                 } else {
 
-                    User.update(in_data.data, { where: { id: id } })
+                    Enquiry.update(in_data.data, { where: { id: id } })
                         .then((result) => {
 
                             res.status(200).send({ result: result, in_data: in_data });
@@ -102,7 +112,7 @@ var soft_delete = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Enquiry.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -114,7 +124,7 @@ var soft_delete = (req, res, next) => {
                     status: 'DELETED'
                 };
 
-                User.update(in_data, { where: { id: id } })
+                Enquiry.update(in_data, { where: { id: id } })
                     .then((result) => {
 
                         res.status(200).send({ result: result, in_data: 'Record deleted softly!' });
@@ -135,7 +145,7 @@ var hard_delete = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Enquiry.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -143,7 +153,7 @@ var hard_delete = (req, res, next) => {
                 res.status(200).send({ err: ["Record not found!"] });
             } else {
 
-                User.destroy({ where: { id: id } })
+                Enquiry.destroy({ where: { id: id } })
                     .then((result) => {
 
                         res.status(200).send({ result: result, in_data: 'Record deleted successfully!' });
@@ -162,8 +172,8 @@ var hard_delete = (req, res, next) => {
 
 var fetchAll = (req, res, next) => {
 
-    User.findAll({
-        attributes: ['firstName', 'lastName', 'fatherName', 'enqDate', 'course', 'courseId', 'remarks','status']
+    Enquiry.findAll({
+        attributes: ['firstName', 'lastName', 'fatherName', 'enqDate', 'courseId', 'remarks','status']
     })
         .then((result) => {
 
@@ -185,7 +195,7 @@ var fetchById = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Enquiry.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {

@@ -20,10 +20,6 @@ module.exports = {
       enqDate: {
         type: Sequelize.DATE
       },
-      course: {
-        type: Sequelize.ENUM('C','CPP','JAVA','NODEJS','PHP'),
-        allowNull:false
-      },
       courseId: {
         type: Sequelize.INTEGER
 

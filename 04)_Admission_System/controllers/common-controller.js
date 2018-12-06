@@ -17,11 +17,12 @@ module.exports = class CommonController {
                 out_data_obj[key] = in_data_obj[key];
                 return true;
             } else {
-                return false;
+                return false;  
             }
         });
 
         return out_data_obj;
+        
     }
 
     get_not_null_keys(in_data_obj) {
@@ -31,10 +32,11 @@ module.exports = class CommonController {
         var err = this.not_null_keys.filter((key) => {
             var flag = true;
             var val = in_data_obj[key];
-
+           
             if (!(key in in_data_obj) && val == undefined || val.trim() == '') {
                 out_err.push(this.err_messages[key] + ' must contains a value!');
                 flag = false;
+                
             }
             return flag;
         });
@@ -52,13 +54,15 @@ module.exports = class CommonController {
         var err = this.required_keys.filter((key) => {
             var flag = true;
             var val = in_data_obj[key];
-
+            
             if (!(key in in_data_obj)) {
                 out_err.push(this.err_messages[key] + ' is required!');
                 flag = false;
+                
             } else if (val == undefined || val.trim() == '') {
                 out_err.push(this.err_messages[key] + ' must contains a value!');
                 flag = false;
+               
             }
             return flag;
         });
@@ -72,12 +76,6 @@ module.exports = class CommonController {
     check_inputs(in_data_obj, in_required) {
 
         var out_err = {};
-
-        if (this.err_messages == undefined) {
-            return { err: ['Kindly declare error messages'] };
-        } else if (this.err_messages.length == 0) {
-            return { err: ['Kindly configure error messages'] };
-        }
 
         if (this.err_messages == undefined) {
             return { err: ['Kindly declare error messages'] };
@@ -103,7 +101,8 @@ module.exports = class CommonController {
             return { err: ['Kindly configure required keys'] };
         }
 
-        var check_required = in_required != undefined || in_required != '' ? true : false;
+        var check_required = in_required != undefined && in_required == true ? true : false;
+
         var out_expected_keys = this.get_expected_keys(in_data_obj);
 
 
@@ -115,6 +114,7 @@ module.exports = class CommonController {
             }
 
             var out_not_null_keys = this.get_not_null_keys(out_required_keys.data);
+            
             if (out_not_null_keys.err.length) {
                 return { err: out_not_null_keys };
             }

@@ -1,10 +1,15 @@
 var express = require('express');
-var User = require('../models').Course;
+var Course = require('../models').Course;
 var CommonCntrl = require('./common-controller');
 
 var config = {};
 
 config.err_messages = {
+    'courseName': "Course Name",
+    'fees':"Fees",
+    'duration':"Duration",
+    'durationType':"Duration Type",
+    'status':"Status"
 };
 
 config.expected_keys = [
@@ -39,11 +44,12 @@ var insert = (req, res, next) => {
     var in_data = {};
     in_data = CommonCntrl_obj.check_inputs(req.body, true);
 
-    if (in_data.err.length) {
+    if (in_data.err.length >0) {
         res.status(200).send({ in_data });
-    } else {
-
-        User.build(in_data.data).save()
+    } else if ((typeof in_data.err.length == undefined)&& (in_data.err.err.length > 0)) {
+        res.status(200).send({ in_data });
+    }else{
+        Course.build(in_data.data).save()
             .then((result) => {
 
                 res.status(200).send({ result: result, in_data: in_data });
@@ -62,7 +68,7 @@ var update = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Course.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -77,7 +83,7 @@ var update = (req, res, next) => {
                     res.status(200).send({ in_data });
                 } else {
 
-                    User.update(in_data.data, { where: { id: id } })
+                    Course.update(in_data.data, { where: { id: id } })
                         .then((result) => {
 
                             res.status(200).send({ result: result, in_data: in_data });
@@ -99,7 +105,7 @@ var soft_delete = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Course.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -111,7 +117,7 @@ var soft_delete = (req, res, next) => {
                     status: 'DELETED'
                 };
 
-                User.update(in_data, { where: { id: id } })
+                Course.update(in_data, { where: { id: id } })
                     .then((result) => {
 
                         res.status(200).send({ result: result, in_data: 'Record deleted softly!' });
@@ -132,7 +138,7 @@ var hard_delete = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Course.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -140,7 +146,7 @@ var hard_delete = (req, res, next) => {
                 res.status(200).send({ err: ["Record not found!"] });
             } else {
 
-                User.destroy({ where: { id: id } })
+                Course.destroy({ where: { id: id } })
                     .then((result) => {
 
                         res.status(200).send({ result: result, in_data: 'Record deleted successfully!' });
@@ -159,8 +165,8 @@ var hard_delete = (req, res, next) => {
 
 var fetchAll = (req, res, next) => {
 
-    User.findAll({
-        attributes: ['firstName', 'lastName', 'email']
+    Course.findAll({
+        attributes: [ 'courseName','fees','duration','durationType','enqId','status']
     })
         .then((result) => {
 
@@ -182,7 +188,7 @@ var fetchById = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Course.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {

@@ -1,10 +1,14 @@
 var express = require('express');
-var User = require('../models').Fees;
+var Fees = require('../models').Fees;
 var CommonCntrl = require('./common-controller');
 
 var config = {};
 
 config.err_messages = {
+    'paymentDate':"Payment Date",
+    'amountPaid': "Amount Paid",
+    'amountPending': "Amount Pending",
+    'admissionId': "Admission Id"
 };
 
 config.expected_keys = [
@@ -19,14 +23,14 @@ config.not_null_keys = [
     'paymentDate',
     'amountPaid',
     'amountPending',
-    'status'
+    'admissionId'
 ];
 
 config.required_keys = [
     'paymentDate',
     'amountPaid',
     'amountPending',
-    'status'
+    'admissionId'
 ];
 
 var CommonCntrl_obj = new CommonCntrl(config);
@@ -36,11 +40,14 @@ var insert = (req, res, next) => {
     var in_data = {};
     in_data = CommonCntrl_obj.check_inputs(req.body, true);
 
-    if (in_data.err.length) {
+    if (in_data.err.length>0) {
         res.status(200).send({ in_data });
-    } else {
 
-        User.build(in_data.data).save()
+    } else if ((typeof in_data.err.err == undefined)&& (in_data.err.err.length >0)){
+        res.status(200).send({ in_data });
+        
+    }else{
+        Fees.build(in_data.data).save()
             .then((result) => {
 
                 res.status(200).send({ result: result, in_data: in_data });
@@ -59,7 +66,7 @@ var update = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Fees.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -74,7 +81,7 @@ var update = (req, res, next) => {
                     res.status(200).send({ in_data });
                 } else {
 
-                    User.update(in_data.data, { where: { id: id } })
+                    Fees.update(in_data.data, { where: { id: id } })
                         .then((result) => {
 
                             res.status(200).send({ result: result, in_data: in_data });
@@ -96,7 +103,7 @@ var soft_delete = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Fees.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -108,7 +115,7 @@ var soft_delete = (req, res, next) => {
                     status: 'DELETED'
                 };
 
-                User.update(in_data, { where: { id: id } })
+                Fees.update(in_data, { where: { id: id } })
                     .then((result) => {
 
                         res.status(200).send({ result: result, in_data: 'Record deleted softly!' });
@@ -129,7 +136,7 @@ var hard_delete = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Fees.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {
@@ -137,7 +144,7 @@ var hard_delete = (req, res, next) => {
                 res.status(200).send({ err: ["Record not found!"] });
             } else {
 
-                User.destroy({ where: { id: id } })
+                Fees.destroy({ where: { id: id } })
                     .then((result) => {
 
                         res.status(200).send({ result: result, in_data: 'Record deleted successfully!' });
@@ -156,8 +163,8 @@ var hard_delete = (req, res, next) => {
 
 var fetchAll = (req, res, next) => {
 
-    User.findAll({
-        attributes: ['firstName', 'lastName', 'email']
+    Fees.findAll({
+        attributes: ['paymentDate','amountPaid','amountPending','admissionId','status']
     })
         .then((result) => {
 
@@ -179,7 +186,7 @@ var fetchById = (req, res, next) => {
 
     var id = req.params.id;
 
-    User.find({ where: { id: id } })
+    Fees.find({ where: { id: id } })
         .then((result) => {
 
             if (result === null) {

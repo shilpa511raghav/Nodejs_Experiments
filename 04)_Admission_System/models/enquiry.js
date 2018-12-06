@@ -7,9 +7,13 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING
     },
     enqDate: DataTypes.DATE,
-    course: {
-      type: DataTypes.ENUM('C','CPP','JAVA','NODEJS','PHP'),
-      allowNull: false
+    // courseId: {
+    //   type: DataTypes.ENUM('C','CPP','JAVA','NODEJS','PHP'),
+    //   allowNull: false
+    // },
+    courseId: {
+      type: DataTypes.INTEGER
+      //get course using courseId from coursetable
     },
     remarks: DataTypes.STRING,
     status: DataTypes.ENUM('OPEN', 'CLOSE', 'DELETED'),

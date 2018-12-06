@@ -8,8 +8,7 @@ module.exports = {
       lastName: "raghav",
       fatherName: "Suresh Raghav",
       enqDate: "2018-11-20",
-      course: "NODEJS",
-      courseId: "4",
+      courseId: "3",
       remarks: "tyy",
       status: "OPEN",
       createdAt: dated,
@@ -20,10 +19,9 @@ module.exports = {
         lastName: "Negi",
         fatherName: "Shivam Negi",
         enqDate: "2018-11-20",
-        course: "PHP",
-        courseId: "2",
+        courseId: "4",
         remarks: "tyy",
-        status: "CLOSED",
+        status: "CLOSE",
         createdAt: dated,
         updatedAt: dated
       }

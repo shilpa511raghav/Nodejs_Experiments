@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 
-var userCtrl = require('../controllers/enquiry-controller');
+var userCtrl = require('../controllers/course-controller');
 
 /* GET users listing. */
 router.get('/', function (req, res, next) {
@@ -16,11 +16,11 @@ router.get('/:id', [
     userCtrl.fetchById
 ]);
 
-router.post('/', [
+router.put('/', [
     userCtrl.insert
 ]);
 
-router.put('/:id', [
+router.post('/:id', [
     userCtrl.update
 ]);
 
