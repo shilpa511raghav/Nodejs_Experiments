@@ -1,6 +1,8 @@
 var express = require('express');
 var CourseCntrl = require("./course-controller");
 var Enquiry = require('../models').Enquiry;
+var Admission= require("../models").Admission;
+var Course= require("../models").Course;
 var CommonCntrl = require('./common-controller');
 
 
@@ -185,7 +187,13 @@ var hard_delete = (req, res, next) => {
 var fetchAll = (req, res, next) => {
 
     Enquiry.findAll({
-        attributes: ['firstName', 'lastName', 'fatherName', 'enqDate', 'courseId', 'remarks','status']
+        attributes: ['firstName','fatherName', 'enqDate'],
+        include : [
+            { model: Admission, attributes:["firstName","lastName","enqId","courseId"],
+            //   include: [
+            //       {model: Course,attributes:["id","courseName","fees"]}]
+            }
+          ]
     })
         .then((result) => {
 
