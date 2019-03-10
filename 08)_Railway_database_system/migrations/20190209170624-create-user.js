@@ -17,6 +17,9 @@ module.exports = {
       password: {
         type: Sequelize.STRING
       },
+      confirmPass:{
+        type: Sequelize.STRING
+      },
       gender: {
         type: Sequelize.STRING
       },
@@ -27,6 +30,9 @@ module.exports = {
         type: Sequelize.STRING
       },
       security_quest: {
+        type: Sequelize.STRING
+      },
+      security_ans: {
         type: Sequelize.STRING
       },
       createdAt: {
